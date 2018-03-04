@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab2Task2Try2/main.cpp
+iostream
+-
+sstream
+-
+

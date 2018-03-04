@@ -1,5 +1,5 @@
-#include<iostream>
-#include<string.h>
+#include <iostream>
+#include <string.h>
 #include <string>
 #include <sstream>
 
@@ -7,140 +7,104 @@ using namespace std;
 
 template <typename T>
 class Queue {
-private:
   T *arr;
-  int size;
+  int length;
   int amount;
-  T *begin;
-  T *end;
 
 public:
   Queue();
   explicit Queue(int size);
+  
   bool push(T *value);
   bool pop(T *value);
-  bool empty();
   bool full();
+  bool empty();
   void show();
+  
+  ~Queue();
 };
 
 template<typename T>
 Queue<T>::Queue() { }
 
-template <typename T>
+template<typename T>
 Queue<T>::Queue(int size) {
   arr = new T[size];
-  this->size = size;
+  length = size;
   amount = 0;
-  begin = arr;
-  end = arr;
 }
 
-template <typename T>
+template<typename T>
 bool Queue<T>::push(T *value) {
-  // Check if there is any space left in the queue
   if (full()) {
     return false;
   }
   
-  // Save the value
-  *end = *value;
-  
-  // Move the end of the Queue to the next position
-  if (end - arr + 1 == size) {
-    end = arr;
-  } else {
-    ++end;
-  }
-  
-  // Increment the amount
-  ++amount;
-  
+  arr[amount++] = *value;
   return true;
 }
 
-template <typename T>
+template<typename T>
 bool Queue<T>::pop(T *value) {
-  // Check if there is any value in the Queue
   if (empty()) {
     return false;
   }
   
-  // Set the output value
-  *value = *begin;
+  *value = *arr;
   
-  // Move the begin of the Queue to the next position
-  if (begin - arr + 1 == size) {
-    begin = arr;
-  } else {
-    ++begin;
+  for (int i = 1; i < amount; ++i) {
+    arr[i-1] = arr[i];
   }
   
-  // Decrement the amount
   --amount;
   
   return true;
 }
 
-template <typename T>
+template<typename T>
 bool Queue<T>::empty() {
   return 0 == amount;
 }
 
-template <typename T>
+template<typename T>
 bool Queue<T>::full() {
-  return size == amount;
+  return length == amount;
 }
 
-template <typename T>
+template<typename T>
 void Queue<T>::show() {
-  T *current = begin;
-  
   for (int i = 0; i < amount; ++i) {
-    cout << *current << ',';
-  
-    if (current - arr + 1 == size) {
-      current = arr;
-    } else {
-      ++current;
-    }
+    cout << arr[i] << ',';
   }
   
   cout << endl;
 }
 
-/*
-int main() {
-  Queue q(4);
-  int i;
-
-  cout << q.push(100) << endl;
-  cout << q.push(2) << endl;
-  q.show();
-  cout << q.pop(&i) << " " << i << endl;
-  cout << q.pop(&i) << " " << i << endl;
-  q.show();
-  cout << q.pop(&i) << " " << i << endl;
-  cout << q.push(3) << endl;
-  q.show();
-  cout << q.push(4) << endl;
-  cout << q.push(5) << endl;
-  cout << q.push(6) << endl;
-  cout << q.push(7) << endl;
-  cout << q.push(8) << endl;
-
-  cout << endl;
-
-  q.show();
-
-  cout << q.pop(&i) << " " << i << endl;
-  cout << q.pop(&i) << " " << i << endl;
-
-  cout << endl;
-  q.show();
-
+template<typename T>
+Queue<T>::~Queue() {
+  delete arr;
 }
-*/
+
+//int main() {
+//  Queue<int> q(3);
+//  int arr[] = {0,1,2,3,4,5,6,7,8,9};
+//  int *i = arr;
+//  int n;
+//
+//  cout << q.push(i) << '\t'; q.show();
+//  cout << q.push(++i) << '\t'; q.show();
+//  cout << q.pop(&n) << '\t' << n << '\t'; q.show();
+//  cout << q.push(++i) << '\t'; q.show();
+//  cout << q.push(++i) << '\t'; q.show();
+//
+//  cout << q.pop(&n) << '\t' << n << '\t'; q.show();
+//  cout << q.pop(&n) << '\t' << n << '\t'; q.show();
+//  cout << q.pop(&n) << '\t' << n << '\t'; q.show();
+//
+//
+//  return 0;
+//}
+
 
 void showBool(bool val){
   if(val)
@@ -230,9 +194,7 @@ int main(){
     if(isCommand(command,"IN"))
     {
 //      init(queue[currentQ],value);
-      Queue<int> *tmp = new Queue<int>(value);
-      queue[currentQ] = *tmp;
-      delete tmp;
+      queue[currentQ] = *new Queue<int>(value);
       continue;
     }
     
