@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab2Task2Try2/main.cpp" "/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab2Task2Try2/cmake-build-debug/CMakeFiles/Lab2Tak2Try2.dir/main.cpp.o"
+  "/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab2Task2/main.cpp" "/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab2Task2/cmake-build-debug/CMakeFiles/Lab2Tak2Try2.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 

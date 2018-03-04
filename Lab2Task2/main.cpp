@@ -100,8 +100,8 @@ bool List<T>::PopTail(T *value) {
   // If wónż jest głowoogonem
   if (!head->next) {
     *value = head->Value;
-    delete head->next;
-    head->next = nullptr;
+    delete head;
+    head = nullptr;
     return true;
   }
   
@@ -155,20 +155,30 @@ bool List<T>::DeleteValue(const T *value) {
     return false;
   }
   
-  Item *prev = head;
+  if (*value == head->Value) {
+    Item *old = head;
+    head = head->next;
+    delete old;
+    return true;
+  }
   
-  do {
-    if (*value != prev->next->Value) {
-      continue;
+  Item *prev = head;
+  Item *curr;
+  
+  while (true) {
+    curr = prev->next;
+
+    if (*value == curr->Value) {
+      Item *next = curr->next;
+      delete curr;
+      prev->next = next;
+      return true;
     }
     
-    Item *next = prev->next->next;
-    delete prev->next;
-    prev->next = next;
-    return true;
-  } while ((prev = prev->next));
-  
-  return false;
+    if (!curr->next || !(prev = prev->next)) {
+      return false;
+    }
+  }
 }
 
 template<typename T>
@@ -231,6 +241,8 @@ void List<T>::Clear() {
     p = p->next;
     delete tmp;
   }
+  
+  head = nullptr;
 }
 
 template<typename T>
