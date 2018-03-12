@@ -21,6 +21,7 @@ public:
   void PushHead(T *value);
   bool PopHead(T *value);
   void PushTail(T *value);
+  bool PushSecondHead(T *value);
   bool PopTail(T *value);
   int FindValue(const T *value);
   bool DeleteValue(const T *value);
@@ -250,6 +251,21 @@ List<T>::~List() {
   Clear();
 }
 
+template<typename T>
+bool List<T>::PushSecondHead(T *value) {
+  if (!head) {
+    return false;
+  }
+  
+  Item *next = head->next;
+  Item *newSecond = new Item;
+  newSecond->Value = *value;
+  newSecond->next = next;
+  head->next = newSecond;
+  
+  return true;
+}
+
 void showBool(bool val){
   if(val)
     cout << "true" << endl;
@@ -383,11 +399,18 @@ int main(){
       list[currentL].PushHead(&value);
       continue;
     }
-    
+  
     if(isCommand(command,"IT"))
     {
 //      insertTail(list[currentL],value);
       list[currentL].PushTail(&value);
+      continue;
+    }
+  
+    if(isCommand(command,"IS"))
+    {
+//      insertTail(list[currentL],value);
+      showBool(list[currentL].PushSecondHead(&value));
       continue;
     }
     
