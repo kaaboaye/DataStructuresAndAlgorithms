@@ -32,7 +32,8 @@ public:
   void PrintHead();
   void PrintTail();
   void Clear();
-  void Join(DoubleLinkedList<T> list);
+  void Join(DoubleLinkedList<T> &list);
+  bool IsEven();
 };
 
 template<typename T>
@@ -59,10 +60,11 @@ void DoubleLinkedList<T>::PushHead(T &value) {
   
   head = new Item;
   head->Value = value;
-  head->next = oldHead;
-  head->prev = oldHead->prev;
   
   oldHead->prev->next = head;
+  
+  head->next = oldHead;
+  head->prev = oldHead->prev;
   
   oldHead->prev = head;
 }
@@ -73,20 +75,21 @@ bool DoubleLinkedList<T>::PopHead(T &value) {
     return false;
   }
   
+  if (head == head->next) {
+    value = head->Value;
+    delete head;
+    head = nullptr;
+    return true;
+  }
+  
   value = head->Value;
   
-  Item *newHead;
+  head->prev->next = head->next;
+  head->next->prev = head->prev;
   
-  newHead = head->next;
-  
-  // x <- []
-  newHead->prev = head->prev;
-  
-  // [] -> x
-  newHead->next = head->next;
-  
+  Item *tmp = head;
   delete head;
-  head = newHead;
+  head = tmp->next;
   
   return true;
 }
@@ -104,14 +107,21 @@ void DoubleLinkedList<T>::PushTail(T &value) {
   newTail->prev = oldTail;
   newTail->next = head;
   
-  head->prev = newTail;
   oldTail->next = newTail;
+  head->prev = newTail;
 }
 
 template<typename T>
 bool DoubleLinkedList<T>::PopTail(T &value) {
   if (!head) {
     return false;
+  }
+  
+  if (head == head->next) {
+    value = head->Value;
+    delete head;
+    head = nullptr;
+    return true;
   }
   
   Item *oldTail = head->prev;
@@ -154,14 +164,24 @@ bool DoubleLinkedList<T>::DelValue(T &value) {
     return false;
   }
   
+  if (head->Value == value && head == head->next) {
+    delete head;
+    head = nullptr;
+    return true;
+  }
+  
   Item *it = head;
   
   while (true) {
     if (it->Value == value) {
       it->next->prev = it->prev;
       it->prev->next = it->next;
+      
+      if (it == head) {
+        head = head->next;
+      }
+      
       delete it;
-  
       return true;
     }
     
@@ -240,11 +260,51 @@ void DoubleLinkedList<T>::Clear() {
 }
 
 template<typename T>
-void DoubleLinkedList<T>::Join(DoubleLinkedList<T> list) {
-  T val;
+void DoubleLinkedList<T>::Join(DoubleLinkedList<T> &list) {
   
-  while (list.PopHead(val)) {
-    PushTail(val);
+  
+  if (!list.head) {
+    return;
+  }
+  
+  if (!head) {
+    head = list.head;
+    list.head = nullptr;
+    return;
+  }
+  
+  Item *tail = head->prev;
+  
+  Item *lHead = list.head;
+  Item *lTail = list.head->prev;
+  
+  head->prev = lTail;
+  lTail->next = head;
+  
+  lHead->prev = tail;
+  tail->next = lHead;
+  
+  list.head = nullptr;
+}
+
+template<typename T>
+bool DoubleLinkedList<T>::IsEven() {
+  if (!head) {
+    return false;
+  }
+  
+  Item *it = head;
+  
+  while (true) {
+    if (it->Value % 2 == 1) {
+      return false;
+    }
+    
+    if (it->next == head) {
+      return true;
+    }
+    
+    it = it->next;
   }
 }
 
@@ -262,7 +322,7 @@ bool isCommand(const string command,const char *mnemonic){
 int main(){
   string line;
   string command;
-  DoubleLinkedList<int> *list;
+  DoubleLinkedList<int> *list = nullptr;
   int currentL=0;
   int value;
   cout << "START" << endl;
@@ -337,9 +397,6 @@ int main(){
     if(isCommand(command,"IN")) //*
     {
 //      init(list[currentL]);
-      DoubleLinkedList<int> *tmp = new DoubleLinkedList<int>();
-      list[currentL] = *tmp;
-      delete tmp;
       continue;
     }
     

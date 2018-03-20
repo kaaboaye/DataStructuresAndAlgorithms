@@ -1,4 +1,4 @@
-# Install script for directory: /Users/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab3
+# Install script for directory: /Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab4
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,5 +35,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab3/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab4/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
