@@ -39,7 +39,8 @@ public:
 private:
   void pushAfter(Item &i, listItem *prev);
   void pushBefore(Item &i, listItem *next);
-  bool pop(listItem *i);
+  bool pop(listItem *li);
+  bool pop(listItem *li, Item &item);
   listItem *new_listItem(Item &i, listItem *n, listItem *p);
 };
 
@@ -117,22 +118,6 @@ void List::DelKeys(int key) {
     li = li->next;
     if (!pop(li->prev)) return;
   }
-  
-//  while (li != sentinal) {
-//    if (li->item.key < key) {
-//      continue;
-//    }
-//
-//    if (li->item.key == key) {
-//      if (!pop(li)) return;
-//    }
-//
-//    if (li->item.key > key) {
-//      return;
-//    }
-//
-//    li = li->next;
-//  }
 }
 
 void List::ShowHead() {
@@ -186,35 +171,35 @@ void List::Concat(List &list) {
   Item item;
   listItem *li = sentinal;
   
-  while (true) {
-    item = list.sentinal->next->item;
-    
-    if (!pop(list.sentinal->next)) {
-      return;
-    }
-    
-    while (li->item.key > item.key && li != li->next) {
+  while (!pop(list.sentinal->next, item)) {
+    while (li->next->item.key <= item.key && sentinal != li->next) {
       li = li->next;
     }
-    
+
     pushAfter(item, li);
   }
 }
 
-bool List::pop(List::listItem *i) {
-  if (i == i->next) {
+bool List::pop(List::listItem *li) {
+  if (li == li->next) {
     return false;
   }
-  
-  listItem *prev = i->prev;
-  listItem *next = i->next;
-  
-  delete i;
-  
-  prev->next = next;
-  next->prev = prev;
+
+  listItem *prev = li->prev;
+  listItem *next = li->next;
+
+  delete li;
+
+  prev->next = li->next;
+  next->prev = li->prev;
   
   return true;
+}
+
+bool List::pop(List::listItem *li, Item &item) {
+  item = li->item;
+
+  return pop(li);
 }
 
 void showBool(bool val){
