@@ -171,7 +171,12 @@ void List::Concat(List &list) {
   Item item;
   listItem *li = sentinal;
   
-  while (!pop(list.sentinal->next, item)) {
+  while (pop(list.sentinal->next, item)) {
+    if (li->item.key > item.key) {
+      pushBefore(item, li);
+      continue;
+    }
+
     while (li->next->item.key <= item.key && sentinal != li->next) {
       li = li->next;
     }

@@ -8,7 +8,7 @@
 #define nullptr NULL
 #endif
 
-#define DEBUG
+//#define DEBUG
 
 using namespace std;
 
@@ -29,36 +29,36 @@ void showArray(int array[], int size){
   cout << endl;
 }
 
-void insertShieeeetSort(int arr[],int n)
-{
-  int i,j,k,elem;
-  for(i=1;i<n;i++)
-  {
-    j=0;
-    elem=arr[i]; // i-th element will be added
-    while(j<i && arr[j]<=elem)// search first greater
-      j++;
-    for(k=i;k>j;k--) // shift elements
-      arr[k]=arr[k-1];
-    arr[j]=elem;
-    //showArr(arr,n);
-  }
-}
-
-void insertSortSlow(int arr[], int n) {
-  int tmp;
-  int j;
-
-  --n;
-
-  for (int i = n; i >= 0; --i) {
-    for (j = i; j < n && arr[j + 1] < arr[j]; ++j) {
-      tmp = arr[j];
-      arr[j] = arr[j + 1];
-      arr[j + 1] = tmp;
-    }
-  }
-}
+//void insertShieeeetSort(int arr[],int n)
+//{
+//  int i,j,k,elem;
+//  for(i=1;i<n;i++)
+//  {
+//    j=0;
+//    elem=arr[i]; // i-th element will be added
+//    while(j<i && arr[j]<=elem)// search first greater
+//      j++;
+//    for(k=i;k>j;k--) // shift elements
+//      arr[k]=arr[k-1];
+//    arr[j]=elem;
+//    //showArr(arr,n);
+//  }
+//}
+//
+//void insertSortSlow(int arr[], int n) {
+//  int tmp;
+//  int j;
+//
+//  --n;
+//
+//  for (int i = n; i >= 0; --i) {
+//    for (j = i; j < n && arr[j + 1] < arr[j]; ++j) {
+//      tmp = arr[j];
+//      arr[j] = arr[j + 1];
+//      arr[j + 1] = tmp;
+//    }
+//  }
+//}
 
 void insertSort(int arr[], int n) {
 #ifdef DEBUG
@@ -78,10 +78,6 @@ void insertSort(int arr[], int n) {
     }
 #endif
 
-#ifndef DEBUG
-    showArray(arr, n+1);
-#endif
-
     key = arr[i];
 
     for (j = i + 1; j <= n && arr[j] < key; ++j) {
@@ -89,6 +85,10 @@ void insertSort(int arr[], int n) {
     }
 
     arr[j - 1] = key;
+
+#ifndef DEBUG
+    showArray(arr, n+1);
+#endif
   }
 }
 
@@ -96,29 +96,58 @@ void bubbleSort(int arr[], int n) {
   --n;
 
   for (int i = 0; i < n; ++i) {
-    showArray(arr, n+1);
     for (int j = 0; j < n - 1; ++j) {
       if (arr[j] > arr[j + 1]) {
         swap(arr[j], arr[j + 1]);
       }
     }
+
+#ifndef DEBUG
+    showArray(arr, n+1);
+#endif
   }
 }
 
+static int *miarr;
+static int misize;
+
 void merge(int*, int, int);
 
+//void mergeSort(int arr[], int size) {
+//  if (size <= 1) {
+//    return;
+//  }
+//
+//  int middle = size / 2;
+//  int *arr2 = arr + middle;
+//
+//  mergeSortIter(arr, middle);
+//  mergeSortIter(arr2, size - middle);
+//
+//  merge(arr, middle, size);
+//#ifndef DEBUG
+//  if (size == misize)
+//    showArray(miarr, misize);
+//#endif
+//}
+
 void mergeSortIter(int arr[], int size) {
-  if (size <= 1) {
-    return;
+  for (int i = 1; i < size; i*=2) {
+    for (int part = 0; part < size/i + 1; ++part) {
+      int begin = part * i;
+      int slice = (part + 1) * 2 * i;
+
+      if (begin + slice > size - 1) {
+        slice = size - 1 - begin;
+      }
+
+      merge(arr + begin, slice / 2, slice);
+    }
+
+#ifndef DEBUG
+      showArray(miarr, misize);
+#endif
   }
-
-  int middle = size / 2;
-  int *arr2 = arr + middle;
-
-  mergeSortIter(arr, middle);
-  mergeSortIter(arr2, size - middle);
-
-  merge(arr, middle, size);
 }
 
 void merge(int *arr, int middle, int size) {
@@ -138,58 +167,61 @@ void merge(int *arr, int middle, int size) {
   int *in2 = in + middle;
 
   int i = 0;
-  int *past = in + middle;
+
+  // Pointers to the cells after arrays
+  int *past = in2;
   int *past2 = in2 + size - middle;
 
   // Copy until one array pass
-  while (in != past || in2 != past2) {
+  while (in != past && in2 != past2) {
     if (*in < *in2) {
-      arr[i] = *in++;
+      arr[i++] = *in++;
     } else {
-      arr[i] = *in2++;
+      arr[i++] = *in2++;
     }
-
-    ++i;
   }
 
   // Copy the rest
-  if (in == past) {
-    while (in2 != past2) {
-      arr[i] = *in2++;
-      ++i;
-    }
-  } else {
-    while (in != past) {
-      arr[i] = *in++;
-      ++i;
-    }
+  while (in2 != past2) {
+    arr[i++] = *in2++;
+  }
+  while (in != past) {
+    arr[i++] = *in++;
   }
 
-//  delete[] in;
+//  delete in;
 }
 
 
 int * loadArray(int size){
-  // TODO !!!
-  return NULL;
+  int *out = new int[size];
+
+  for (int i = 0; i < size; ++i) {
+    cin >> out[i];
+  }
+
+  return out;
 }
 
 bool isCommand(const string command,const char *mnemonic){
   return command==mnemonic;
 }
 
-int main() {
+
+//int main() {
 //  int arr[] = {6, 2, 1, 0, 4};
-  int arr[] = {1, 0};
+////  int arr[] = {0,14, 1};
+//
+//  showArray(arr, sizeof(arr)/ sizeof(int));
+//  mergeSortIter(arr, sizeof(arr)/ sizeof(int));
+////  merge(arr, 2, 3);
+//  showArray(arr, sizeof(arr)/ sizeof(int));
+//
+//  return 0;
+//}
 
-  showArray(arr, sizeof(arr)/ sizeof(int));
-  mergeSortIter(arr, sizeof(arr)/ sizeof(int));
-  showArray(arr, sizeof(arr)/ sizeof(int));
 
-  return 0;
-}
 
-/*
 int main(){
   string line;
   string command;
@@ -241,6 +273,8 @@ int main(){
     {
       int *arr=loadArray(size);
       showArray(arr,size);
+      miarr = arr;
+      misize = size;
       mergeSortIter(arr,size);
       continue;
     }
@@ -249,4 +283,5 @@ int main(){
   }
   return 0;
 }
- */
+
+//*/
