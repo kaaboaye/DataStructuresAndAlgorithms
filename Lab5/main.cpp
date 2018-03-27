@@ -3,12 +3,66 @@
 #include <sstream>
 #include <algorithm>
 
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <sys/time.h>
+#include <ctime>
+#endif
+
+/* Remove if already defined */
+#ifndef int64
+typedef long long int64;
+#endif
+
+#ifndef uint64
+typedef unsigned long long uint64;
+#endif
+
+/* Returns the amount of milliseconds elapsed since the UNIX epoch. Works on both
+ * windows and linux. */
+
+uint64 GetTime()
+{
+#ifdef _WIN32
+  /* Windows */
+ FILETIME ft;
+ LARGE_INTEGER li;
+
+ /* Get the amount of 100 nano seconds intervals elapsed since January 1, 1601 (UTC) and copy it
+  * to a LARGE_INTEGER structure. */
+ GetSystemTimeAsFileTime(&ft);
+ li.LowPart = ft.dwLowDateTime;
+ li.HighPart = ft.dwHighDateTime;
+
+ uint64 ret = li.QuadPart;
+ ret -= 116444736000000000LL; /* Convert from file time to UNIX epoch time. */
+ ret /= 10000; /* From 100 nano seconds (10^-7) to 1 millisecond (10^-3) intervals */
+
+ return ret;
+#else
+  /* Linux */
+  struct timeval tv;
+
+  gettimeofday(&tv, NULL);
+
+  uint64 ret = tv.tv_usec;
+  /* Convert from micro seconds (10^-6) to milliseconds (10^-3) */
+  ret /= 1000;
+
+  /* Adds the seconds (10^0) after converting them to milliseconds (10^-3) */
+  ret += (tv.tv_sec * 1000);
+
+  return ret;
+#endif
+}
+
 
 #ifndef nullptr
 #define nullptr NULL
 #endif
 
-//#define DEBUG
+#define FAST
 
 using namespace std;
 
@@ -61,23 +115,12 @@ void showArray(int array[], int size){
 //}
 
 void insertSort(int arr[], int n) {
-#ifdef DEBUG
-  int _a[n];
-#endif
-
   int key;
   int j;
 
   --n;
 
   for (int i = n - 1; i >= 0; --i) {
-
-#ifdef DEBUG
-    for(int _i = 0; _i < n+1; ++_i) {
-      _a[_i] = arr[_i];
-    }
-#endif
-
     key = arr[i];
 
     for (j = i + 1; j <= n && arr[j] < key; ++j) {
@@ -86,7 +129,7 @@ void insertSort(int arr[], int n) {
 
     arr[j - 1] = key;
 
-#ifndef DEBUG
+#ifndef FAST
     showArray(arr, n+1);
 #endif
   }
@@ -96,13 +139,12 @@ void bubbleSort(int arr[], int n) {
   --n;
 
   for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < n - 1; ++j) {
+    for (int j = 0; j < n; ++j) {
       if (arr[j] > arr[j + 1]) {
         swap(arr[j], arr[j + 1]);
       }
     }
-
-#ifndef DEBUG
+#ifndef FAST
     showArray(arr, n+1);
 #endif
   }
@@ -113,51 +155,54 @@ static int misize;
 
 void merge(int*, int, int);
 
-//void mergeSort(int arr[], int size) {
-//  if (size <= 1) {
-//    return;
-//  }
-//
-//  int middle = size / 2;
-//  int *arr2 = arr + middle;
-//
-//  mergeSortIter(arr, middle);
-//  mergeSortIter(arr2, size - middle);
-//
-//  merge(arr, middle, size);
-//#ifndef DEBUG
-//  if (size == misize)
-//    showArray(miarr, misize);
-//#endif
-//}
+// RECURSIVE
+void mergeSort(int arr[], int size) {
+  if (size <= 1) {
+    return;
+  }
+
+  int middle = size / 2;
+  int *arr2 = arr + middle;
+
+  mergeSort(arr, middle);
+  mergeSort(arr2, size - middle);
+
+  merge(arr, middle, size);
+#ifndef FAST
+    showArray(miarr, misize);
+#endif
+}
 
 void mergeSortIter(int arr[], int size) {
-  for (int i = 1; i < size; i*=2) {
-    for (int part = 0; part < size/i + 1; ++part) {
-      int begin = part * i;
-      int slice = (part + 1) * 2 * i;
+  for (int length = 2; length < size - 1; length *= 2) {
+    for (int i = 0; i * length < size - 1; ++i) {
+      int begin = i * length;
+      int middle = length / 2;
+      int end;
 
-      if (begin + slice > size - 1) {
-        slice = size - 1 - begin;
+      if ((i + 1) * length > size) {
+        end = size - i * length - 1;
+      } else {
+        end = length;
       }
 
-      merge(arr + begin, slice / 2, slice);
-    }
+      if (middle > end) {
+        if (length * 2 > size) {
+          merge(arr, length, size);
+        }
 
-#ifndef DEBUG
-      showArray(miarr, misize);
+        break;
+      }
+
+      merge(arr + begin, middle, end);
+    }
+#ifndef FAST
+    showArray(miarr, misize);
 #endif
   }
 }
 
 void merge(int *arr, int middle, int size) {
-#ifdef DEBUG
-  int _a[size];
-  for (int i = 0; i < size; ++i) {
-    _a[i] = arr[i];
-  }
-#endif
-
   // Copy input arrays
   int *in = new int[size];
   for (int i = 0; i < size; ++ i) {
@@ -166,8 +211,6 @@ void merge(int *arr, int middle, int size) {
 
   int *in2 = in + middle;
 
-  int i = 0;
-
   // Pointers to the cells after arrays
   int *past = in2;
   int *past2 = in2 + size - middle;
@@ -175,18 +218,18 @@ void merge(int *arr, int middle, int size) {
   // Copy until one array pass
   while (in != past && in2 != past2) {
     if (*in < *in2) {
-      arr[i++] = *in++;
+      *arr++ = *in++;
     } else {
-      arr[i++] = *in2++;
+      *arr++ = *in2++;
     }
   }
 
   // Copy the rest
   while (in2 != past2) {
-    arr[i++] = *in2++;
+    *arr++ = *in2++;
   }
   while (in != past) {
-    arr[i++] = *in++;
+    *arr++ = *in++;
   }
 
 //  delete in;
@@ -207,21 +250,40 @@ bool isCommand(const string command,const char *mnemonic){
   return command==mnemonic;
 }
 
+// Benchmark
 
-//int main() {
-//  int arr[] = {6, 2, 1, 0, 4};
-////  int arr[] = {0,14, 1};
-//
-//  showArray(arr, sizeof(arr)/ sizeof(int));
-//  mergeSortIter(arr, sizeof(arr)/ sizeof(int));
-////  merge(arr, 2, 3);
-//  showArray(arr, sizeof(arr)/ sizeof(int));
-//
-//  return 0;
-//}
+#define len(var) sizeof(var) / sizeof(int)
+#define fill(var) for (int i = 0; i < len(var); ++i) { var[i] = (rand()%100)+1; }
+#define show(var) showArray((var), len(var));
+int main() {
+  int arr100[100];
+  int arr10k[10000];
+  int arr100k[100000];
 
+  srand((unsigned)time(nullptr));
 
+  fill(arr100);
+  show(arr100);
+}
+//*/
 
+// Just boring main()
+/*
+int main() {
+  int arr[] = {6, 2, 1, 0, 4};
+//  int arr[] = {0,14, 1};
+
+  showArray(arr, sizeof(arr)/ sizeof(int));
+  mergeSortIter(arr, sizeof(arr)/ sizeof(int));
+//  merge(arr, 2, 3);
+  showArray(arr, sizeof(arr)/ sizeof(int));
+
+  return 0;
+}
+//*/
+
+// Test API
+/*
 int main(){
   string line;
   string command;
