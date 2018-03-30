@@ -159,6 +159,10 @@ void List::Clean() {
 }
 
 void List::Concat(List &list) {
+  if (list.sentinal == list.sentinal->next) {
+    return;
+  }
+  
   if (sentinal == sentinal->next) {
     delete sentinal;
     sentinal = list.sentinal;

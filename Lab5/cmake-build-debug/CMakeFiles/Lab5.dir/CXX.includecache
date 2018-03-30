@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab5/main.cpp
+/Users/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab5/main.cpp
 iostream
 -
 string
@@ -14,11 +14,5 @@ string
 sstream
 -
 algorithm
--
-Windows.h
--
-sys/time.h
--
-ctime
 -
 
