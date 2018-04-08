@@ -1,3 +1,3 @@
-/Users/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab6/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab6/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab6/cmake-build-debug/CMakeFiles/Lab6.dir
+/home/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab6/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab6/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/mieszkowaw/Code/WUST/DataStructuresAndAlgorithms/Lab6/cmake-build-debug/CMakeFiles/Lab6.dir

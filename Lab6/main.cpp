@@ -4,14 +4,6 @@
 
 using namespace std;
 
-//void swap(int &a, int &b) {
-//  int tmp;
-//
-//  tmp = a;
-//  a = b;
-//  b = tmp;
-//}
-
 class Heap {
   
   int *arr;
@@ -41,6 +33,8 @@ Heap::Heap(int size) {
 }
 
 void Heap::Load(int amount) {
+  // maybe throw some exception when (amount > size)
+
   pos = amount;
   
   int *arr = this->arr;
@@ -59,16 +53,21 @@ void Heap::Push(int value) {
 }
 
 void Heap::Sort() {
-  for (int i = pos; i > 1; --i) {
-    swap(arr[1], arr[i]);
+  const int realPos = pos;
+  --pos;
+
+  while (pos) {
+    swap(arr[0], arr[pos]);
+    hepify(0);
     --pos;
-    fixHeap();
   }
+
+  pos = realPos;
 }
 
 void Heap::fixHeap() {
   for (int node = pos / 2; node >= 1; --node) {
-    hepify(node);
+    hepify(node - 1);
   }
 }
 
@@ -77,13 +76,13 @@ void Heap::hepify(int node) {
   int left = childLeft(node);
   int right = childRight(node);
   
-  if (left <= pos && arr[left] > arr[node]) {
+  if (left < pos && arr[left] > arr[node]) {
     nextNode = left;
   } else {
     nextNode = node;
   }
-  
-  if (right <= pos && arr[right] > arr[nextNode]) {
+
+  if (right < pos && arr[right] > arr[nextNode]) {
     nextNode = right;
   }
   
@@ -111,8 +110,8 @@ void show(Heap *h){
 
 // Glue
 
-void init(Heap *&h, int size){
-  h = new Heap(size);
+void init(Heap **h, int size){
+  *h = new Heap(size);
 }
 
 void loadAndMakeHeap(Heap *h, int howMany){
@@ -185,7 +184,7 @@ int main(){
     
     if(isCommand(command,"IN")) //*
     {
-      init(heap[currentH],value);
+      init(&heap[currentH],value);
       continue;
     }
     

@@ -1,0 +1,27 @@
+go 3
+in 10
+ld 10
+55 85 77 15 62 20 57 43 12 50
+sh
+ms
+sh
+ch 1
+in 10
+ld 7
+9 5 8 3 1 7 4
+sh
+ad 10
+sh
+ad 6
+sh
+ms
+sh
+ha
+
+go 3
+ch 0
+in 5
+ld 5
+1 2 3 2 1
+sh
+
