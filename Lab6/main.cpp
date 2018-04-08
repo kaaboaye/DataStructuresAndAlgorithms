@@ -4,8 +4,15 @@
 
 using namespace std;
 
+//void swap(int &a, int &b) {
+//  int tmp;
+//
+//  tmp = a;
+//  a = b;
+//  b = tmp;
+//}
+
 class Heap {
-  friend void show(Heap *h);
   
   int *arr;
   int size;
@@ -14,16 +21,18 @@ class Heap {
 public:
   explicit Heap(int size);
   void Load(int amount);
-  void Hepify();
-};
+  void Push(int value);
+  void Sort();
 
-void show(Heap *h){
-  for(int i=0;i<h->pos;i++)
-  {
-    cout << h->arr[i] << ",";
-  }
-  cout << endl;
-}
+private:
+  void fixHeap();
+  void hepify(int node);
+  int childLeft(int node);
+  int childRight(int node);
+  
+  friend void show(Heap *h);
+  
+};
 
 Heap::Heap(int size) {
   this->arr = new int[size];
@@ -32,34 +41,90 @@ Heap::Heap(int size) {
 }
 
 void Heap::Load(int amount) {
+  pos = amount;
+  
   int *arr = this->arr;
-  const int *passed = arr + amount;
+  const int *passed = arr + pos;
   
   while (arr != passed) {
     cin >> *arr++;
   }
+  
+  fixHeap();
 }
 
-void Heap::Hepify() {
-
+void Heap::Push(int value) {
+  arr[pos++] = value;
+  fixHeap();
 }
+
+void Heap::Sort() {
+  for (int i = pos; i > 1; --i) {
+    swap(arr[1], arr[i]);
+    --pos;
+    fixHeap();
+  }
+}
+
+void Heap::fixHeap() {
+  for (int node = pos / 2; node >= 1; --node) {
+    hepify(node);
+  }
+}
+
+void Heap::hepify(int node) {
+  int nextNode;
+  int left = childLeft(node);
+  int right = childRight(node);
+  
+  if (left <= pos && arr[left] > arr[node]) {
+    nextNode = left;
+  } else {
+    nextNode = node;
+  }
+  
+  if (right <= pos && arr[right] > arr[nextNode]) {
+    nextNode = right;
+  }
+  
+  if (node != nextNode) {
+    swap(arr[node], arr[nextNode]);
+    hepify(nextNode);
+  }
+}
+
+int Heap::childLeft(int node) {
+  return 2 * node + 1;
+}
+
+int Heap::childRight(int node) {
+  return 2 * node + 2;
+}
+
+void show(Heap *h){
+  for(int i=0; i < h->pos; ++i)
+  {
+    cout << h->arr[i] << ",";
+  }
+  cout << endl;
+}
+
+// Glue
 
 void init(Heap *&h, int size){
   h = new Heap(size);
 }
 
-//void heapAdjustment(Heap &h){
-//}
-
 void loadAndMakeHeap(Heap *h, int howMany){
+  h->Load(howMany);
 }
-
 
 void add(Heap *h, int value){
+  h->Push(value);
 }
 
-
 void makeSorted(Heap *h){
+  h->Sort();
 }
 
 void showBool(bool val){
