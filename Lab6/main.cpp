@@ -19,6 +19,7 @@ public:
 private:
   void fixHeap();
   void hepify(int node);
+  int parent(int node);
   int childLeft(int node);
   int childRight(int node);
   
@@ -48,8 +49,23 @@ void Heap::Load(int amount) {
 }
 
 void Heap::Push(int value) {
-  arr[pos++] = value;
-  fixHeap();
+  int node = pos++;
+  int p;
+  
+  arr[node] = value;
+  
+  do {
+    p = parent(node);
+    
+    if (arr[p] < arr[node]) {
+      swap(arr[p], arr[node]);
+    } else {
+      break;
+    }
+    
+    node = p;
+    
+  } while (node);
 }
 
 void Heap::Sort() {
@@ -106,6 +122,10 @@ void show(Heap *h){
     cout << h->arr[i] << ",";
   }
   cout << endl;
+}
+
+int Heap::parent(int node) {
+  return (node - 1) / 2;
 }
 
 // Glue

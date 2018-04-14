@@ -35,6 +35,7 @@ public:
   void ShowTail();
   void Clean();
   void Concat(List &list);
+  void Taaak();
 
 private:
   void pushAfter(Item &i, listItem *prev);
@@ -186,6 +187,15 @@ void List::Concat(List &list) {
     }
 
     pushAfter(item, li);
+  }
+}
+
+void List::Taaak() {
+  listItem *li = sentinal->next;
+  
+  while (sentinal != li->next) {
+    pop(li->next);
+    li = li->next;
   }
 }
 

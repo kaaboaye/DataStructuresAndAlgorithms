@@ -1,3 +1,0 @@
-/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab2Task1Try2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab2Task1Try2/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/mieszkowaw/Code/DataStructuresAndAlgorithms/Lab2Task1Try2/cmake-build-debug/CMakeFiles/Lab2Task1Try2.dir
