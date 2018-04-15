@@ -1,0 +1,27 @@
+START
+!GO 2
+!IN
+!IE 1 4
+true
+!IE 4 1
+true
+!IE 3 7
+true
+!FK 3
+3(7)
+!IE 6 10
+true
+!RK 4
+4(1)
+!SI
+1(4),3(7),6(10),
+!SP
+1(4),6(10),3(7),
+!SQ
+3(7),6(10),1(4),
+!NN
+3
+!HE
+3
+!HA
+END OF EXECUTION

@@ -1,0 +1,14 @@
+GO 2
+IN
+IE 1 4
+IE 4 1
+IE 3 7
+FK 3
+IE 6 10
+RK 4
+SI
+SP
+SQ
+NN
+HE
+HA
