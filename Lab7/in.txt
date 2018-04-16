@@ -1,14 +1,51 @@
-GO 2
-IN
-IE 1 4
-IE 4 1
-IE 3 7
-FK 3
-IE 6 10
-RK 4
-SI
-SP
-SQ
-NN
-HE
-HA
+go 2
+in
+ie 12 12
+ie 9 9
+si
+ie 3 3
+ie 4 4
+ie 5 5
+si
+sp
+sq
+nn
+he
+fk 1
+fk 2
+fk 3
+fk 4
+fk 5
+fk 6
+fk 7
+fk 8
+fk 9
+fk 10
+fk 11
+fk 12
+rk 5
+si
+rk 3
+si
+rk 10
+si
+rk 7
+si
+rk 8
+si
+rk 9
+si
+rk 6
+si
+rk 4
+si
+cl
+nn
+ie 7 7
+ie 6 6
+ie 10 10
+ie 8 8
+si
+ha
+
+

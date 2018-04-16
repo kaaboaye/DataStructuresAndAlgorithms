@@ -52,6 +52,7 @@ public:
 
 private:
   node **min(node **n);
+  node **max(node **n);
   void del(node **n);
   void delChildren(node *n);
   void countChildren(node *n, int &counter);
@@ -124,27 +125,28 @@ bool BST::Push(Item item) {
 }
 
 void BST::ShowInorder() {
-  node *h = head;
-  node *n = head;
+//  node *h = head;
+//  node *n = head;
+//
+//  while (h) {
+//    while (n->smaller) {
+//      n = n->smaller;
+//    }
+//
+//    while (true) {
+//      n->item.Print();
+//
+//      if (n == h) {
+//        break;
+//      } else {
+//        n = n->parent;
+//      }
+//    }
+//
+//    n = h = h->greater;
+//  }
   
-  while (h) {
-    while (n->smaller) {
-      n = n->smaller;
-    }
-  
-    while (true) {
-      n->item.Print();
-      
-      if (n == h) {
-        break;
-      } else {
-        n = n->parent;
-      }
-    }
-    
-    n = h = h->greater;
-  }
-  
+  showInorder(head);
   cout << endl;
 }
 
@@ -209,22 +211,24 @@ bool BST::Pop(int key, Item &item) {
 void BST::del(BST::node **n) {
   // no children
   if (!(**n).greater && !(**n).smaller) {
-    *n = nullptr;
     delete *n;
+    *n = nullptr;
     return;
   }
 
   // only smaller
   if (!(**n).greater) {
-    *n = (**n).smaller;
+    node *tmp = (**n).smaller;
     delete *n;
+    *n = tmp;
     return;
   }
 
   // only greater
   if (!(**n).smaller) {
-    *n = (**n).greater;
+    node *tmp = (**n).greater;
     delete *n;
+    *n = tmp;
     return;
   }
 
@@ -232,7 +236,6 @@ void BST::del(BST::node **n) {
   if ((**n).smaller && (**n).greater) {
     node **minNode = min(&(**n).greater);
     (**n).item = (**minNode).item;
-
     del(minNode);
     return;
   }
@@ -240,7 +243,15 @@ void BST::del(BST::node **n) {
 
 BST::node **BST::min(BST::node **n) {
   while ((**n).smaller) {
-    *n = (**n).smaller;
+    n = &(**n).smaller;
+  }
+  
+  return n;
+}
+
+BST::node **BST::max(BST::node **n) {
+  while ((**n).greater) {
+    n = &(**n).greater;
   }
   
   return n;
