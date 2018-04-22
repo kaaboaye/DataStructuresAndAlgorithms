@@ -27,17 +27,19 @@ void BST::Add(string word) {
   }
   
   _Node *n = root;
-  const char *key = word.c_str();
+  int cmp;
   
   while (true) {
-    if (strcmp(n->key.c_str(), key) == 0) {
+    cmp = strcmp(n->key.c_str(), word.c_str());
+    
+    if (0 == cmp) {
       ++n->val;
       return;
     }
   
-    if (strcmp(n->key.c_str(), key) < 0) {
+    if (cmp < 0) {
       if (!n->left) {
-        n->left = new _Node(key);
+        n->left = new _Node(word);
         return;
       }
     
@@ -45,9 +47,9 @@ void BST::Add(string word) {
       continue;
     }
     
-    if (strcmp(n->key.c_str(), key) > 0) {
+    if (cmp > 0) {
       if (!n->right) {
-        n->right = new _Node(key);
+        n->right = new _Node(word);
         return;
       }
     
