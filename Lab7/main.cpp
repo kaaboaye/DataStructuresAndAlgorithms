@@ -48,6 +48,7 @@ public:
   bool Pop(int key, Item &item);
   void Clear();
   int Count();
+  int CountOneChild();
   int Height();
 
 private:
@@ -56,6 +57,7 @@ private:
   void del(node **n);
   void delChildren(node *n);
   void countChildren(node *n, int &counter);
+  void countOneChildren(node *n, int &counter);
   int height(node *n);
   void showInorder(node *n);
   void showPreorder(node *n);
@@ -325,6 +327,22 @@ void BST::showPostorder(BST::node *n) {
   showPostorder(n->smaller);
   showPostorder(n->greater);
   n->item.Print();
+}
+
+int BST::CountOneChild() {
+  int amount = 0;
+  countOneChildren(head, amount);
+  return amount;
+}
+
+void BST::countOneChildren(BST::node *n, int &counter) {
+  if (!n) return;
+  
+  if (!n->smaller && n->greater ||
+      !n->greater && n->smaller) ++counter;
+  
+  countOneChildren(n->smaller, counter);
+  countOneChildren(n->greater, counter);
 }
 
 void init(BST &tree){
