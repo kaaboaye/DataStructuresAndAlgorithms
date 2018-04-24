@@ -59,25 +59,54 @@ void BST::Add(string word) {
   }
 }
 
-string BST::MostPopular() {
-  string str;
-  uint64_t topVal = 0;
-  
-  walk(root, str, topVal);
-  
-  return str;
+void BST::MostPopular() {
+  walk(root);
 }
 
-void BST::walk(BST::_Node *node, string &topStr, uint64_t &topVal) {
+void BST::walk(BST::_Node *node) {
   if (!node) {
     return;
   }
   
-  if (node->val > topVal) {
-    topStr = node->key;
-    topVal = node->val;
+  for (int i = 0; i < SIZE; ++i) {
+    if (node->val <= arr[i].val) continue;
+    
+    for (int j = SIZE - 1; j > i; --j) {
+      arr[j] = arr[j - 1];
+    }
+    
+    arr[i].key = node->key;
+    arr[i].val = node->val;
+    
+    break;
   }
   
-  walk(node->left, topStr, topVal);
-  walk(node->right, topStr, topVal);
+  walk(node->left);
+  walk(node->right);
+}
+
+void BST::counter(BST::_Node *n, int &c) {
+  if (!n) {
+    return;
+  }
+  
+  ++c;
+  
+  counter(n->left, c);
+  counter(n->right, c);
+  
+}
+
+int BST::height(BST::_Node *n) {
+  
+  if (!n) return 0;
+  
+  int smaller = height(n->left);
+  int greater = height(n->right);
+  
+  if (smaller > greater) {
+    return smaller + 1;
+  } else {
+    return greater + 1;
+  }
 }

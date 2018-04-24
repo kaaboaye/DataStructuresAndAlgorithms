@@ -57,7 +57,8 @@ int main() {
 //  cout << file.rdbuf();
   
   c->Load(file);
-  cout << c->MostPopular() << endl;
+  c->MostPopular();
+  c->Print();
   
   clock_t t1 = clock();
   double t = (double) (t1 - t0) / (double) CLOCKS_PER_SEC;

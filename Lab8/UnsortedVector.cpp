@@ -19,18 +19,25 @@ void UnsortedVector::Add(string word) {
   vec.push_back(elem);
 }
 
-string UnsortedVector::MostPopular() {
+void UnsortedVector::MostPopular() {
   string topStr;
   uint64_t topAmount = 0;
   
-  for (const _Elem& obj: vec) {
-    if (obj.val > topAmount) {
-      topStr = obj.key;
-      topAmount = obj.val;
+  for (const _Elem& o: vec) {
+  
+    for (int i = 0; i < SIZE; ++i) {
+      if (o.val <= arr[i].val) continue;
+    
+      for (int j = SIZE - 1; j > i; --j) {
+        arr[j] = arr[j - 1];
+      }
+    
+      arr[i].key = o.key;
+      arr[i].val = o.val;
+    
+      break;
     }
   }
-  
-  return topStr;
 }
 
 UnsortedVector::_Elem::_Elem(string key) {

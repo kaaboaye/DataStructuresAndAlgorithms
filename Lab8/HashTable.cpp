@@ -11,16 +11,22 @@ void HashTable::Add(string word) {
   ++map[word];
 }
 
-string HashTable::MostPopular() {
-  string topStr;
-  uint64_t topAmount = 0;
+void HashTable::MostPopular() {
   
-  for (const auto& obj: map) {
-    if (obj.second > topAmount) {
-      topStr = obj.first;
-      topAmount = obj.second;
+  for (const auto& o: map) {
+  
+    for (int i = 0; i < SIZE; ++i) {
+      if (o.second <= arr[i].val) continue;
+      
+      for (int j = SIZE - 1; j > i; --j) {
+        arr[j] = arr[j - 1];
+      }
+      
+      arr[i].key = o.first;
+      arr[i].val = o.second;
+  
+      break;
     }
+    
   }
-  
-  return topStr;
 }

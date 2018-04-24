@@ -49,3 +49,9 @@ void Counter::Load(istream &in) {
     Add(word);
   }
 }
+
+void Counter::Print() {
+  for (int i = 0; i < SIZE; ++i) {
+    cout << arr[i].key << " " << arr[i].val << endl;
+  }
+}

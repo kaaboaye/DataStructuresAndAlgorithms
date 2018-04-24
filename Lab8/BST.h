@@ -24,10 +24,12 @@ class BST: public Counter {
 public:
   BST();
   void Add(string word) override;
-  string MostPopular() override;
+  void MostPopular() override;
 
 private:
-  void walk(_Node *node, string &topStr, uint64_t &topVal);
+  void walk(_Node *node);
+  void counter(_Node* n, int &c);
+  int height(_Node *n);
 };
 
 

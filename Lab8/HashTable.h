@@ -16,7 +16,7 @@ class HashTable: public Counter {
 
 public:
   void Add(string word) override;
-  string MostPopular() override;
+  void MostPopular() override;
 };
 
 

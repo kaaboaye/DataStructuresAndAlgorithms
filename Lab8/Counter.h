@@ -7,14 +7,20 @@
 
 #include <string>
 #include <sstream>
+#include "Element.h"
 
 using namespace std;
 
 class Counter {
+
+protected:
+  Node arr[SIZE];
+  
 public:
   virtual void Add(string word) = 0;
-  virtual string MostPopular() = 0;
+  virtual void MostPopular() = 0;
   void Load(istream &in);
+  void Print();
 };
 
 

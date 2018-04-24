@@ -8,16 +8,22 @@ void BalancedBST::Add(string word) {
   ++tree[word];
 }
 
-string BalancedBST::MostPopular() {
-  string topStr;
-  uint64_t topAmount = 0;
+void BalancedBST::MostPopular() {
   
-  for (const auto& obj: tree) {
-    if (obj.second > topAmount) {
-      topStr = obj.first;
-      topAmount = obj.second;
+  for (const auto& o: tree) {
+    
+    for (int i = 0; i < SIZE; ++i) {
+      if (o.second <= arr[i].val) continue;
+      
+      for (int j = SIZE - 1; j > i; --j) {
+        arr[j] = arr[j - 1];
+      }
+      
+      arr[i].key = o.first;
+      arr[i].val = o.second;
+      
+      break;
     }
+    
   }
-  
-  return topStr;
 }
