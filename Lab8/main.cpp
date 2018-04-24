@@ -6,6 +6,7 @@
 #include "HashTable.h"
 #include "BST.h"
 #include "BalancedBST.h"
+#include "UnsortedVector.h"
 
 int main() {
   Counter *c;
@@ -16,6 +17,7 @@ int main() {
        "1) BST" << endl <<
        "2) Balanced BST" << endl <<
        "3) HashTable" << endl <<
+       "4) UnsortedVector" << endl <<
        "Structure: ";
 
   cin >> opt;
@@ -30,6 +32,10 @@ int main() {
 
     case 3:
       c = new HashTable();
+      break;
+  
+    case 4:
+      c = new UnsortedVector();
       break;
 
     default:
