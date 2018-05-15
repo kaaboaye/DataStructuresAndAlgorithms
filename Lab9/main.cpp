@@ -21,7 +21,7 @@ public:
 	explicit Dsf(int size);
 	
 	void MakeSets();
-	int Find(int val);
+	int Find(const int val);
 	int Parent(int val);
 	void Union(int val1, int val2);
 
@@ -48,7 +48,7 @@ void Dsf::MakeSets() {
 }
 
 int Dsf::Find(const int ptr) {
-  return getVal(find(getPtr(ptr)));
+  return (int) getVal(find(getPtr(ptr)));
 }
 
 Dsf::_Node *Dsf::find(Dsf::_Node *node) {
@@ -62,7 +62,7 @@ Dsf::_Node *Dsf::find(Dsf::_Node *node) {
 }
 
 int Dsf::Parent(int val) {
-  return getVal(getPtr(val)->Parent);
+  return (int) getVal(getPtr(val)->Parent);
 }
 
 void Dsf::Union(int val1, int val2) {
