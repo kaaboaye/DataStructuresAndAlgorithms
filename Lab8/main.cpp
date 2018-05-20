@@ -7,6 +7,7 @@
 #include "BST.h"
 #include "BalancedBST.h"
 #include "UnsortedVector.h"
+#include "WordMap.h"
 
 int main() {
   Counter *c;
@@ -18,6 +19,7 @@ int main() {
        "2) Balanced BST" << endl <<
        "3) HashTable" << endl <<
        "4) UnsortedVector" << endl <<
+       "5) WordMap" << endl <<
        "Structure: ";
 
   cin >> opt;
@@ -36,6 +38,10 @@ int main() {
   
     case 4:
       c = new UnsortedVector();
+      break;
+  
+    case 5:
+      c = new WordMap();
       break;
 
     default:

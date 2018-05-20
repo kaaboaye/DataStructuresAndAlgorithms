@@ -3,4 +3,4 @@ project(Lab8)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Lab8 main.cpp BST.cpp BST.h Element.cpp Element.h BalancedBST.h HashTable.h Counter.h BanlancedBST.cpp HashTable.cpp Counter.cpp UnsortedVector.h UnsortedVector.cpp)
+add_executable(Lab8 main.cpp BST.cpp BST.h Element.cpp Element.h BalancedBST.h HashTable.h Counter.h BanlancedBST.cpp HashTable.cpp Counter.cpp UnsortedVector.h UnsortedVector.cpp WordMap.cpp WordMap.h)
