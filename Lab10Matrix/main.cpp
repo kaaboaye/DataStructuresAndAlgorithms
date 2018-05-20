@@ -80,7 +80,7 @@ void Graph::LoadGraph(const int vertices, const int edges) {
 }
 
 void Graph::InsertEdge(const int v1, const int v2, const Edge weight) {
-  matrix->Node(v1, v2) = matrix->Node(v1, v2) = weight;
+  matrix->Node(v1, v2) = weight;
 }
 
 bool Graph::GetEdge(const int v1, const int v2, Edge &weight) {
