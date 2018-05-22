@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cmath>
 #include <map>
+#include <cstring>
 
 #ifndef nullptr
 #define nullptr NULL
@@ -14,16 +15,22 @@ typedef double Edge;
 typedef map<int, Edge> Edges;
 
 class Graph {
-  Edges *edges = nullptr;
-  int vertices = 0;
+  Edges *edges;
+  int vertices;
 
 public:
+  Graph();
   void LoadGraph(int vertices, int edges);
   void InsertEdge(int v1, int v2, Edge weight);
   bool GetEdge(int v1, int v2, Edge &weight);
   void ToMatrix();
   void ToArrays();
 };
+
+Graph::Graph() {
+  edges = nullptr;
+  vertices = 0;
+}
 
 void Graph::LoadGraph(const int vertices, const int edges) {
   this->vertices = vertices;
@@ -43,11 +50,10 @@ void Graph::InsertEdge(const int v1, const int v2, const Edge weight) {
 }
 
 bool Graph::GetEdge(int v1, int v2, Edge &weight) {
-  auto w = edges[v1].find(v2);
-  if (edges[v1].end() == w) {
+  if (edges[v1].end() == edges[v1].find(v2)) {
     return false;
   }
-  weight = w->second;
+  weight = edges[v1].find(v2)->second;
   return true;
 }
 
@@ -77,8 +83,11 @@ void Graph::ToArrays() {
   for (int row = 0; row < vertices; ++row) {
     cout << row << ':';
     
-    for (const auto &edge : edges[row]) {
-      cout << edge.first << '(' << edge.second << "),";
+//    for (const auto &edge : edges[row]) {
+//      cout << edge.first << '(' << edge.second << "),";
+//    }
+    for (Edges::iterator it = edges[row].begin(); it != edges[row].end(); it++) {
+      cout << it->first << '(' << it->second << "),";
     }
     
     cout << endl;

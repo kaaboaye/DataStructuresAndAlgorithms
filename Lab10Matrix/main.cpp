@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <cstring>
 
 #ifndef nullptr
 #define nullptr NULL
@@ -9,53 +10,53 @@
 
 using namespace std;
 
-template <class T>
-class Matrix {
-  char *arr;
-  int sizeX;
-  T defaultValue;
-
-public:
-  Matrix(int sizeX, int sizeY);
-  T& Node(int x, int y);
-  bool IsDefault(int x, int y);
-  bool IsDefault(T &node);
-};
-
-template<class T>
-Matrix<T>::Matrix(const int sizeX, const int sizeY) {
-  size_t size = sizeof(T) * sizeX * sizeY;
-  
-  this->sizeX = sizeX;
-  this->arr = new char[size];
-
-#define defByte 0xFF
-  memset(&defaultValue, defByte, sizeof(T));
-  memset(arr, defByte, size);
-}
-
-template<class T>
-T &Matrix<T>::Node(int x, int y) {
-  return (T&) (*(arr + ((sizeof(T) * sizeX * y) + (sizeof(T) * x))));
-}
-
-template<class T>
-bool Matrix<T>::IsDefault(int x, int y) {
-  return (bool) memcmp(&Node(x, y), &defaultValue, sizeof(T));
-}
-
-template<class T>
-bool Matrix<T>::IsDefault(T &node) {
-  return (bool) memcmp(&node, &defaultValue, sizeof(T));
-}
-
 typedef double Edge;
 
-class Graph {
-  Matrix<Edge> *matrix = nullptr;
-  int vertices = 0;
+class Matrix {
+  char *arr;
+  int size;
+  Edge defaultValue;
 
 public:
+  Matrix(int size);
+  Edge& Node(int x, int y);
+  bool IsDefault(int x, int y);
+  bool IsDefault(Edge &node);
+};
+
+Matrix::Matrix(const int size) {
+  size_t sizeByte = sizeof(Edge) * size * size;
+  
+  this->size = size;
+  this->arr = new char[sizeByte];
+
+#define defByte 0xFF
+  memset(&defaultValue, defByte, sizeof(Edge));
+  memset(arr, defByte, sizeByte);
+  
+  for (int i = 0; i < size; ++i) {
+    Node(i, i) = 0;
+  }
+}
+
+Edge &Matrix::Node(int x, int y) {
+  return (Edge&) (*(arr + ((sizeof(Edge) * size * y) + (sizeof(Edge) * x))));
+}
+
+bool Matrix::IsDefault(int x, int y) {
+  return (bool) memcmp(&Node(x, y), &defaultValue, sizeof(Edge));
+}
+
+bool Matrix::IsDefault(Edge &node) {
+  return (bool) memcmp(&node, &defaultValue, sizeof(Edge));
+}
+
+class Graph {
+  Matrix *matrix;
+  int vertices;
+
+public:
+  Graph();
   void LoadGraph(int vertices, int edges);
   void InsertEdge(int v1, int v2, Edge weight);
   bool GetEdge(int v1, int v2, Edge &weight);
@@ -67,7 +68,7 @@ void Graph::LoadGraph(const int vertices, const int edges) {
   this->vertices = vertices;
   delete matrix;
   
-  matrix = new Matrix<Edge>(vertices, vertices);
+  matrix = new Matrix(vertices);
   
   for (int i = 0; i < edges; ++i) {
     int v1, v2;
@@ -91,11 +92,6 @@ bool Graph::GetEdge(const int v1, const int v2, Edge &weight) {
 void Graph::ToMatrix() {
   for (int row = 0; row < vertices; ++row) {
     for (int col = 0; col < vertices; ++col) {
-      if (row == col) {
-        cout << "0,";
-        continue;
-      }
-      
       Edge w = matrix->Node(row, col);
   
       if (matrix->IsDefault(w)) {
@@ -125,6 +121,11 @@ void Graph::ToArrays() {
     
     cout << endl;
   }
+}
+
+Graph::Graph() {
+  matrix = nullptr;
+  vertices = 0;
 }
 
 void loadGraph(Graph &g, int n, int m){
