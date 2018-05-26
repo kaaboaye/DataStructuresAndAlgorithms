@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cmath>
 #include <cstring>
+#include <limits>
 
 #ifndef nullptr
 #define nullptr NULL
@@ -11,9 +12,10 @@
 using namespace std;
 
 typedef double Edge;
+#define nullEdge numeric_limits<double>::infinity()
 
 class Matrix {
-  char *arr;
+  Edge *arr;
   int size;
   Edge defaultValue;
 
@@ -25,22 +27,26 @@ public:
 };
 
 Matrix::Matrix(const int size) {
-  size_t sizeByte = sizeof(Edge) * size * size;
+  size_t arrSize = (size_t) size * size;
   
   this->size = size;
-  this->arr = new char[sizeByte];
+  this->arr = new Edge[arrSize];
 
-#define defByte 0xFF
-  memset(&defaultValue, defByte, sizeof(Edge));
-  memset(arr, defByte, sizeByte);
-  
-  for (int i = 0; i < size; ++i) {
-    Node(i, i) = 0;
+  defaultValue = nullEdge;
+
+  for (int row = 0; row < size; ++row) {
+    for (int col = 0; col < size; ++col) {
+      if (row == col) {
+        Node(row, col) = 0;
+      } else {
+        Node(row, col) = defaultValue;
+      }
+    }
   }
 }
 
 Edge &Matrix::Node(int x, int y) {
-  return (Edge&) (*(arr + ((sizeof(Edge) * size * y) + (sizeof(Edge) * x))));
+  return (Edge&) (*(arr + ((size * y) + x)));
 }
 
 bool Matrix::IsDefault(int x, int y) {
@@ -112,6 +118,10 @@ void Graph::ToArrays() {
     cout << row << ':';
     
     for (int col = 0; col < vertices; ++col) {
+      if (row == col) {
+        continue;
+      }
+
       Edge w = matrix->Node(row, col);
       
       if (matrix->IsDefault(w)) {
