@@ -26,7 +26,8 @@ public:
   void MostPopular() override;
 
 private:
-  void walk(_Node *node, char *s, int id);
+  void walk(_Node *node, string &s);
+//  void walk(_Node *node, const char *s, char *c);
 };
 
 

@@ -44,29 +44,25 @@ List::List() {
 
 Edge &List::operator[](int x) {
   if (!root) {
-    root = new _Node(x);
-    return root->val;
+    return (root = new _Node(x))->val;
   }
-
+  
   _Node *node = root;
   while (true) {
     if (node->key == x) {
       return node->val;
     }
-
+    
     _Node *next = node->next;
     if (!next) {
-      node->next = new _Node(x);
-      return node->next->val;
+      return (node->next = new _Node(x))->val;
     }
-
+    
     if (next->key > x) {
       node->next = new _Node(x);
-      node->next = next;
-      return node->val;
+      node->next->next = next;
+      return node->next->val;
     }
-
-    node = next;
   }
 }
 
