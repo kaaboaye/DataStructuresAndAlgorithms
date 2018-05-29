@@ -26,36 +26,34 @@ void WordMap::Add(string word) {
 }
 
 void WordMap::MostPopular() {
-  char s[250];
-  s[0] = 0;
-  walk(root, s, 0);
+  string s;
+  walk(root, s);
 }
 
-void WordMap::walk(_Node *node, char *s, int id) {
-  // Match
+void WordMap::walk(WordMap::_Node *node, string &s) {
   if (node->val > 0) {
     for (int i = 0; i < SIZE; ++i) {
       if (node->val <= arr[i].val) continue;
-    
+      
       for (int j = SIZE - 1; j > i; --j) {
         arr[j] = arr[j - 1];
       }
-    
-      arr[i].key = string(s);
+      
+      arr[i].key = s;
       arr[i].val = node->val;
-    
+      
       break;
     }
   }
   
-  // Go on
   for (int i = 0; i < _WordMap_Node_Arr_Size; ++i) {
-    s[id] = getC(i);
-    s[++id] = 0;
+    s += getC(i);
     
     if (node->branches[i]) {
-      walk(node->branches[i], s, id);
+      walk(node->branches[i], s);
     }
+    
+    s.pop_back();
   }
 }
 
