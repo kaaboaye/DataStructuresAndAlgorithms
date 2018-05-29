@@ -76,22 +76,16 @@ Edge *List::Find(int x) {
   }
 
   _Node *node = root;
-  while (true) {
-    if (node->key == x) {
-      return &node->val;
-    }
-
+  while (node->key != x) {
     _Node *next = node->next;
-    if (!next) {
-      return nullptr;
-    }
-
-    if (next->key > x) {
+    if (!next || next->key > x) {
       return nullptr;
     }
 
     node = next;
   }
+
+  return &node->val;
 }
 
 typedef List Edges;

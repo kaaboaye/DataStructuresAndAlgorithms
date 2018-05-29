@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstring>
 #include <limits>
+#include <queue>
 
 #ifndef nullptr
 #define nullptr NULL
@@ -22,8 +23,8 @@ class Matrix {
 public:
   Matrix(int size);
   Edge& Node(int x, int y);
-  bool IsDefault(int x, int y);
-  bool IsDefault(Edge &node);
+  bool IsEdge(int x, int y);
+  bool IsEdge(Edge &node);
 };
 
 Matrix::Matrix(const int size) {
@@ -49,11 +50,11 @@ Edge &Matrix::Node(int x, int y) {
   return (Edge&) (*(arr + ((size * y) + x)));
 }
 
-bool Matrix::IsDefault(int x, int y) {
+bool Matrix::IsEdge(int x, int y) {
   return (bool) memcmp(&Node(x, y), &defaultValue, sizeof(Edge));
 }
 
-bool Matrix::IsDefault(Edge &node) {
+bool Matrix::IsEdge(Edge &node) {
   return (bool) memcmp(&node, &defaultValue, sizeof(Edge));
 }
 
@@ -68,6 +69,11 @@ public:
   bool GetEdge(int v1, int v2, Edge &weight);
   void ToMatrix();
   void ToArrays();
+  void BFS(int v);
+  void DFS(int v);
+
+private:
+  void DFSWalk(int v, bool *visited);
 };
 
 void Graph::LoadGraph(const int vertices, const int edges) {
@@ -92,7 +98,7 @@ void Graph::InsertEdge(const int v1, const int v2, const Edge weight) {
 
 bool Graph::GetEdge(const int v1, const int v2, Edge &weight) {
   weight = matrix->Node(v1, v2);
-  return matrix->IsDefault(weight);
+  return matrix->IsEdge(weight);
 }
 
 void Graph::ToMatrix() {
@@ -100,7 +106,7 @@ void Graph::ToMatrix() {
     for (int col = 0; col < vertices; ++col) {
       Edge w = matrix->Node(row, col);
   
-      if (matrix->IsDefault(w)) {
+      if (matrix->IsEdge(w)) {
         cout << w;
       } else {
         cout << '-';
@@ -124,7 +130,7 @@ void Graph::ToArrays() {
 
       Edge w = matrix->Node(row, col);
       
-      if (matrix->IsDefault(w)) {
+      if (matrix->IsEdge(w)) {
         cout << col << '(' << w << "),";
       }
     }
@@ -136,6 +142,55 @@ void Graph::ToArrays() {
 Graph::Graph() {
   matrix = nullptr;
   vertices = 0;
+}
+
+void Graph::BFS(int v) {
+  queue<int> q;
+  bool *visited = new bool[vertices];
+
+  for (int i = 0; i < vertices; ++i) {
+    visited[i] = false;
+  }
+
+  visited[v] = true;
+  q.push(v);
+
+  while (!q.empty()) {
+
+    v = q.front();
+    cout << v << ',';
+    q.pop();
+
+    for (int i = 0; i < vertices; ++i) {
+      if (v != i && matrix->IsEdge(v, i) && !visited[i]) {
+        visited[i] = true;
+        q.push(i);
+      }
+    }
+  }
+
+  cout << endl;
+}
+
+void Graph::DFS(int v) {
+  bool *visited = new bool[vertices];
+  for (int i = 0; i < vertices; ++i) {
+    visited[i] = false;
+  }
+
+  DFSWalk(v, visited);
+}
+
+void Graph::DFSWalk(int v, bool *visited) {
+  visited[v] = true;
+  cout << v << ',';
+
+  for (int i = 0; i < vertices; ++i) {
+    if (v != i && matrix->IsEdge(v, i) && !visited[i]) {
+      visited[i] = true;
+      q.push(i);
+    }
+  }
 }
 
 void loadGraph(Graph &g, int n, int m){
@@ -198,7 +253,7 @@ int main(){
       showAsMatrix(graph[currentT]);
       continue;
     }
-    
+
     if(isCommand(command,"SA"))
     {
       showAsArrayOfLists(graph[currentT]);
@@ -208,6 +263,13 @@ int main(){
     
     // read next argument, one int value
     stream >> value;
+
+
+    if(isCommand(command,"BF"))
+    {
+      graph[currentT].BFS(value);
+      continue;
+    }
     
     if(isCommand(command,"LG"))
     {
