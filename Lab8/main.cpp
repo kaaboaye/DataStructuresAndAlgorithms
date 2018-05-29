@@ -61,7 +61,6 @@ int main() {
   clock_t t0 = clock();
   
 //  cout << file.rdbuf();
-  
   c->Load(file);
   c->MostPopular();
   c->Print();

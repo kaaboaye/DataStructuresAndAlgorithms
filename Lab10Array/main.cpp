@@ -6,6 +6,8 @@
 #include <limits>
 #include <list>
 #include <algorithm>
+#include <queue>
+#include <map>
 
 #ifndef nullptr
 #define nullptr NULL
@@ -16,11 +18,14 @@ using namespace std;
 typedef double Edge;
 #define nullEdge numeric_limits<double>::infinity()
 
+//#define USE_LIST
+#ifdef USE_LIST
+
 struct EdgesNode {
   int first;
   Edge second;
   
-  EdgesNode(int key);
+  explicit EdgesNode(int key);
 };
 
 EdgesNode::EdgesNode(int key) {
@@ -33,6 +38,7 @@ class Edges: public list<EdgesNode> {
 public:
   iterator find(int key);
   Edge& operator[] (int x);
+  bool isKey(int key);
 };
 
 Edges::iterator Edges::find(int key) {
@@ -51,6 +57,22 @@ Edge& Edges::operator[](int x) {
   }
 }
 
+bool Edges::isKey(int key) {
+  return find(key) != end();
+}
+
+#else
+class Edges: public map<int, Edge> {
+public:
+  bool isKey(int key);
+};
+
+bool Edges::isKey(int key) {
+  return find(key) != end();
+}
+
+#endif
+
 class Graph {
   Edges *edges;
   int vertices;
@@ -62,6 +84,11 @@ public:
   bool GetEdge(int v1, int v2, Edge &weight);
   void ToMatrix();
   void ToArrays();
+  void BFS(int v);
+  void DFS(int v);
+  
+private:
+  void DFSWalk(int v, bool *visited);
 };
 
 Graph::Graph() {
@@ -125,6 +152,57 @@ void Graph::ToArrays() {
     }
     
     cout << endl;
+  }
+}
+
+void Graph::BFS(int v) {
+  queue<int> q;
+  bool *visited = new bool[vertices];
+  
+  for (int i = 0; i < vertices; ++i) {
+    visited[i] = false;
+  }
+  
+  q.push(v);
+  visited[v] = true;
+  
+  while (!q.empty()) {
+    
+    v = q.front();
+    cout << v << ',';
+    q.pop();
+    
+    for (int i = 0; i < vertices; ++i) {
+      if (edges[v].isKey(i) && !visited[i]) {
+        visited[i] = true;
+        q.push(i);
+      }
+    }
+  }
+  
+  cout << endl;
+}
+
+void Graph::DFS(int v) {
+  bool *visited = new bool[vertices];
+  for (int i = 0; i < vertices; ++i) {
+    visited[i] = false;
+  }
+  
+  DFSWalk(v, visited);
+  
+  cout << endl;
+}
+
+void Graph::DFSWalk(int v, bool *visited) {
+  visited[v] = true;
+  cout << v << ',';
+  
+  for (int i = 0; i < vertices; ++i) {
+    if (v != i && edges[v].isKey(i) && !visited[i]) {
+      visited[i] = true;
+      DFSWalk(i, visited);
+    }
   }
 }
 
@@ -198,6 +276,20 @@ int main(){
     
     // read next argument, one int value
     stream >> value;
+  
+  
+    if(isCommand(command,"BF"))
+    {
+      graph[currentT].BFS(value);
+      continue;
+    }
+  
+  
+    if(isCommand(command,"DF"))
+    {
+      graph[currentT].DFS(value);
+      continue;
+    }
     
     if(isCommand(command,"LG"))
     {
