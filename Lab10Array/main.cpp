@@ -4,6 +4,8 @@
 #include <cmath>
 #include <cstring>
 #include <limits>
+#include <list>
+#include <algorithm>
 
 #ifndef nullptr
 #define nullptr NULL
@@ -14,83 +16,40 @@ using namespace std;
 typedef double Edge;
 #define nullEdge numeric_limits<double>::infinity()
 
-class List {
-public:
-  struct _Node {
-    int key;
-    Edge val;
-    _Node *next;
-
-    explicit _Node(int key);
-  };
-
-  _Node *root;
-
-public:
-  List();
-  Edge& operator[] (int x);
-  Edge *Find(int x);
+struct EdgesNode {
+  int first;
+  Edge second;
+  
+  EdgesNode(int key);
 };
 
-List::_Node::_Node(int key) {
-  this->key = key;
-  val = nullEdge;
-  next = nullptr;
+EdgesNode::EdgesNode(int key) {
+  this->first = key;
+  second = nullEdge;
 }
 
-List::List() {
-  root = nullptr;
+class Edges: public list<EdgesNode> {
+
+public:
+  iterator find(int key);
+  Edge& operator[] (int x);
+};
+
+Edges::iterator Edges::find(int key) {
+  iterator it;
+  for (it = begin(); it != end() && it->first != key; ++it) {};
+  return it;
 }
 
-Edge &List::operator[](int x) {
-  if (!root) {
-    return (root = new _Node(x))->val;
-  }
-  
-  _Node *node = root;
-  while (true) {
-    if (node->key == x) {
-      return node->val;
-    }
-    
-    _Node *next = node->next;
-    if (!next) {
-      return (node->next = new _Node(x))->val;
-    }
-    
-    if (next->key > x) {
-      node->next = new _Node(x);
-      node->next->next = next;
-      return node->next->val;
-    }
+Edge& Edges::operator[](int x) {
+  iterator it = find(x);
+  if (it != end()) {
+    return (insert(it, EdgesNode(x)))->second;
+  } else {
+    push_back(EdgesNode(x));
+    return back().second;
   }
 }
-
-Edge *List::Find(int x) {
-  if (!root) {
-    return nullptr;
-  }
-
-  _Node *node = root;
-  while (true) {
-    if (node->key == x) {
-      return &node->val;
-    }
-
-    _Node *next = node->next;
-    if (!next) {
-      return nullptr;
-    }
-
-    if (next->key > x) {
-      return nullptr;
-    }
-
-    node = next;
-  }
-}
-
-typedef List Edges;
 
 class Graph {
   Edges *edges;
@@ -128,12 +87,10 @@ void Graph::InsertEdge(const int v1, const int v2, const Edge weight) {
 }
 
 bool Graph::GetEdge(int v1, int v2, Edge &weight) {
-  Edge *w = edges[v1].Find(v2);
-  if (!w) {
+  if (edges[v1].end() == edges[v1].find(v2)) {
     return false;
   }
-
-  weight = *w;
+  weight = edges[v1].find(v2)->second;
   return true;
 }
 
@@ -162,11 +119,9 @@ void Graph::ToMatrix() {
 void Graph::ToArrays() {
   for (int row = 0; row < vertices; ++row) {
     cout << row << ':';
-
-    List::_Node *e = edges[row].root;
-    while (e) {
-      cout << e->key << '(' << e->val << "),";
-      e = e->next;
+    
+    for (Edges::iterator it = edges[row].begin(); it != edges[row].end(); it++) {
+      cout << it->first << '(' << it->second << "),";
     }
     
     cout << endl;
