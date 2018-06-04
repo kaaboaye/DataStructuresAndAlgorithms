@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <queue>
 #include <map>
+#include <vector>
 
 #ifndef nullptr
 #define nullptr NULL
@@ -86,9 +87,11 @@ public:
   void ToArrays();
   void BFS(int v);
   void DFS(int v);
+  vector<Edge>& SSSP(int v);
   
 private:
   void DFSWalk(int v, bool *visited);
+  int minDist(vector<Edge> &dist, vector<bool> &set);
 };
 
 Graph::Graph() {
@@ -204,6 +207,50 @@ void Graph::DFSWalk(int v, bool *visited) {
       DFSWalk(i, visited);
     }
   }
+}
+
+vector<Edge> &Graph::SSSP(int v) {
+  vector<Edge> *dist = new vector<Edge>((size_t) vertices, INT_MAX);
+  vector<bool> set((size_t) vertices, false);
+  
+  (*dist)[v] = 0;
+  
+  for (int count = 0; count < vertices - 1; ++count) {
+    int u = minDist((*dist), set);
+    set [u] = true;
+    
+    for (int i = 0; i < vertices; ++i) {
+      Edge e;
+      
+      if (
+          !set[i] &&
+          (*dist)[u] != INT_MAX &&
+          GetEdge(u, i, e) &&
+          (*dist)[u] + e < (*dist)[i]
+          ) {
+        (*dist)[i] = (*dist)[u] + e;
+      }
+    }
+  }
+  
+  return *dist;
+}
+
+int Graph::minDist(vector<Edge> &dist, vector<bool> &set) {
+  Edge min = INT_MAX;
+  int minIndex;
+  
+  for (int v = 0; v < vertices; ++v) {
+    if (
+        !set[v] &&
+        dist[v] <= min
+        ) {
+      min = dist[v];
+      minIndex = v;
+    }
+  }
+  
+  return minIndex;
 }
 
 void loadGraph(Graph &g, int n, int m){
