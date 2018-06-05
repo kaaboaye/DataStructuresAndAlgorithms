@@ -369,6 +369,15 @@ int main(){
       continue;
     }
     
+    if (isCommand(command, "SS")) {
+      for (const Edge e : graph[currentT].SSSP(value)) {
+        cout << e << ',';
+      }
+      
+      cout << endl;
+      continue;
+    }
+    
     
     if(isCommand(command,"CH"))
     {
