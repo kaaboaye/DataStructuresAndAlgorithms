@@ -9,6 +9,7 @@
 #include <queue>
 #include <map>
 #include <vector>
+#include <float.h>
 
 #ifndef nullptr
 #define nullptr NULL
@@ -18,6 +19,7 @@ using namespace std;
 
 typedef double Edge;
 #define nullEdge numeric_limits<double>::infinity()
+#define maxEdge DBL_MAX
 
 //#define USE_LIST
 #ifdef USE_LIST
@@ -210,7 +212,7 @@ void Graph::DFSWalk(int v, bool *visited) {
 }
 
 vector<Edge> &Graph::SSSP(int v) {
-  vector<Edge> *dist = new vector<Edge>((size_t) vertices, INT_MAX);
+  vector<Edge> *dist = new vector<Edge>((size_t) vertices, maxEdge);
   vector<bool> set((size_t) vertices, false);
   
   (*dist)[v] = 0;
@@ -224,7 +226,7 @@ vector<Edge> &Graph::SSSP(int v) {
       
       if (
           !set[i] &&
-          (*dist)[u] != INT_MAX &&
+          (*dist)[u] != maxEdge &&
           GetEdge(u, i, e) &&
           (*dist)[u] + e < (*dist)[i]
           ) {
@@ -237,7 +239,7 @@ vector<Edge> &Graph::SSSP(int v) {
 }
 
 int Graph::minDist(vector<Edge> &dist, vector<bool> &set) {
-  Edge min = INT_MAX;
+  Edge min = maxEdge;
   int minIndex;
   
   for (int v = 0; v < vertices; ++v) {
@@ -370,11 +372,22 @@ int main(){
     }
     
     if (isCommand(command, "SS")) {
-      for (const Edge e : graph[currentT].SSSP(value)) {
-        cout << e << ',';
-      }
+//      int i = -1;
+//      for (const Edge e : graph[currentT].SSSP(value)) {
+//        ++i;
+//        if (e == maxEdge) continue;
+//
+//        cout << i << '(' << e << ')' << endl;
+//      }
       
-      cout << endl;
+      const vector<Edge> &arr = graph[currentT].SSSP(value);
+      for (int i = 0; i < arr.size(); ++i) {
+        if (arr[i] == maxEdge) {
+          continue;
+        }
+        
+        cout << i << '(' << arr[i] << ')' << endl;
+      }
       continue;
     }
     
